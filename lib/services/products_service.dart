@@ -10,6 +10,8 @@ class ProductsService extends ChangeNotifier {
   final List<Product> products = [];
   bool isLoading = true;
 
+  late Product selectedProduct;
+
   ProductsService() {
     loadProducts();
   }

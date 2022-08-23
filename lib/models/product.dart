@@ -10,6 +10,7 @@ class Product {
         required this.name,
         this.picture,
         required this.price,
+        this.id
     });
 
     bool avaliable;
@@ -35,4 +36,12 @@ class Product {
         "picture": picture,
         "price": price,
     };
+
+    Product copy() => Product(
+      avaliable: avaliable, 
+      name: name, 
+      picture: picture,
+      price: price,
+      id: id,
+    );
 }
