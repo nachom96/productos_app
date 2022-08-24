@@ -8,7 +8,9 @@ class ProductsService extends ChangeNotifier {
 
   final String _baseUrl = 'flutter-varios-32494-default-rtdb.europe-west1.firebasedatabase.app';
   final List<Product> products = [];
+
   bool isLoading = true;
+  bool isSaving = false;
 
   late Product selectedProduct;
 
@@ -38,6 +40,40 @@ class ProductsService extends ChangeNotifier {
      notifyListeners();
 
      // return products;
+  }
+
+  Future saverOrCreateProduct( Product product ) async {
+
+    isSaving = true;
+    notifyListeners();
+
+    if ( product.id == null ){
+      // Es necesario crear
+    } else{
+      // Actualizar
+      await updateProduct(product);
+    }
+
+    isSaving = false;
+    notifyListeners();
+
+  }
+
+  Future<String> updateProduct ( Product product ) async {
+
+    final url = Uri.https(_baseUrl, 'products/${ product.id }.json');
+    final resp = await http.put(url, body: product.toJson());
+    final decodedData = resp.body;
+
+    print( decodedData );
+
+    // Se puede hacer también con un forEach
+
+    final index = products.indexWhere((element) => element.id == product.id);
+    products[index] = product;
+
+    return product.id!;
+
   }
 
  }
