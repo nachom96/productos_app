@@ -15,7 +15,8 @@ import 'package:http/http.dart' as http;
       
       final Map<String, dynamic> authData = {
         'email' : email,
-        'password' : password
+        'password' : password,
+        'returnSecureToken' : true
       };
 
       final url = Uri.https(_baseUrl, '/v1/accounts:signUp', {
@@ -36,11 +37,12 @@ import 'package:http/http.dart' as http;
 
     }
 
-        Future<String?> login( String email, String password) async{
+      Future<String?> login( String email, String password) async{
       
       final Map<String, dynamic> authData = {
         'email' : email,
-        'password' : password
+        'password' : password,
+        'returnSecureToken' : true
       };
 
       final url = Uri.https(_baseUrl, '/v1/accounts:signInWithPassword', {

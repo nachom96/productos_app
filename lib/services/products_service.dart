@@ -2,13 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:productos_app/models/models.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:productos_app/models/models.dart';
 
 class ProductsService extends ChangeNotifier {
 
   final String _baseUrl = 'flutter-varios-32494-default-rtdb.europe-west1.firebasedatabase.app';
   final List<Product> products = [];
+
+  final storage = FlutterSecureStorage();
 
   File? newPictureFile;
 
@@ -27,7 +31,9 @@ class ProductsService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.https(_baseUrl, 'products.json');
+    final url = Uri.https(_baseUrl, 'products.json', {
+      'auth': await storage.read(key: 'token') ?? ''
+    });
     final resp = await http.get(url);
 
     // Decodificar json
@@ -65,8 +71,10 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> updateProduct ( Product product ) async {
 
-    final url = Uri.https(_baseUrl, 'products/${ product.id }.json');
-    final resp = await http.put(url, body: product.toJson());
+    final url = Uri.https(_baseUrl, 'products/${ product.id }.json', {
+      'auth': await storage.read(key: 'token') ?? ''
+    });
+    final resp = await http.put(url, body: product.toJson(),);
     final decodedData = resp.body;
 
     print( decodedData );
