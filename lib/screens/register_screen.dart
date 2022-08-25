@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/providers/login_form_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:productos_app/providers/login_form_provider.dart';
+import 'package:productos_app/services/services.dart';
 
 import 'package:productos_app/ui/input_decorations.dart';
 import 'package:productos_app/widgets/widgets.dart';
@@ -105,19 +107,23 @@ class _LoginForm extends StatelessWidget {
               onPressed: loginForm.isLoading? null : () async {
 
                 FocusScope.of(context).unfocus();
-
+                final authService = Provider.of<AuthService>(context, listen: false);    
                 if ( !loginForm.isValidForm() ) return;
 
                 loginForm.isLoading = true;
-
-                await Future.delayed(Duration(seconds: 2));
-
-                loginForm.isLoading = false;
-
+                
+                final String? errorMessage = await authService.createUser(loginForm.email, loginForm.password);
+                if ( errorMessage == null){
                 Navigator.pushReplacementNamed(context, 'home');
+                } else{
+                  // Mostrar error en pantalla
+                  print(errorMessage);
+                  loginForm.isLoading = false;
+                }
+                // ignore: use_build_context_synchronously
             },
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
                   loginForm.isLoading
                   ? 'Espere'

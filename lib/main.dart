@@ -12,7 +12,8 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: ( _ ) => ProductsService(),)
+        ChangeNotifierProvider(create: ( _ ) => AuthService(),),
+        ChangeNotifierProvider(create: ( _ ) => ProductsService(),),
       ],
       child: MyApp(),
       );
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         'login': ( _ ) => LoginScreen(),
         'home': ( _ ) => HomeScreen(),
         'product': ( _ ) => ProductScreen(),
+        'register': ( _ ) => RegisterScreen(),
         'register': ( _ ) => RegisterScreen(),
         
       },
