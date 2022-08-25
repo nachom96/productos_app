@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -6,6 +7,8 @@ import 'package:http/http.dart' as http;
     
     final String _baseUrl = 'identitytoolkit.googleapis.com';
     final String _firebaseToken = 'AIzaSyCj8UVdbx-xd173QPTBtiOw3HzGmz7uruI';
+
+    final storage = FlutterSecureStorage();
 
     // Si devuelve null significa que puede pasar a la siguiente pantalla
     Future<String?> createUser( String email, String password) async{
@@ -24,6 +27,7 @@ import 'package:http/http.dart' as http;
 
       if ( decodedResp.containsKey('idToken')){ 
         // Hay que guardar el Token en un lugar seguro
+        await storage.write(key: 'token', value: decodedResp['idToken']);
         // return decodedResp['idToken'];
         return null; 
       } else{
@@ -47,8 +51,8 @@ import 'package:http/http.dart' as http;
       final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
       if ( decodedResp.containsKey('idToken')){ 
-        // Hay que guardar el Token en un lugar seguro
         // return decodedResp['idToken'];
+        await storage.write(key: 'token', value: decodedResp['idToken']);
         return null; 
       } else{
         return decodedResp['error']['message'];
@@ -56,7 +60,16 @@ import 'package:http/http.dart' as http;
 
     }
 
+    Future logout() async{
+      await storage.delete(key: 'token');
+      return;
+    }
 
+    Future<String> readToken() async{
+      
+      return await storage.read(key: 'token') ?? '';
+      
+    }
 
 
   }
