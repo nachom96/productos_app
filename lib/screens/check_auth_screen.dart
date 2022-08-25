@@ -15,11 +15,13 @@ class CheckAuthScreen extends StatelessWidget {
         future: authService.readToken(),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (!snapshot.hasData) {
-            return Column(
-              children: const [
-                Text('Autenticando'),
-                CircularProgressIndicator()
-              ],
+            return Center(
+              child: Column(
+                children: const [
+                  Text('Espere'),
+                  CircularProgressIndicator()
+                ],
+              ),
             );
           }
 
