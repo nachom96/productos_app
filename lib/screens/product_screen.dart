@@ -39,6 +39,20 @@ class _ProductScreenBody extends StatelessWidget {
     
     final productForm = Provider.of<ProductFormProvider>(context);
 
+    prueba(ImageSource source) async{
+      final picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+         // ImageSource.camera,
+         imageQuality: 100
+         );
+         if ( pickedFile == null ){
+           return;
+         } else{
+           productService.updateSelectedProductImage(pickedFile.path);
+        }                    
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -62,21 +76,10 @@ class _ProductScreenBody extends StatelessWidget {
                 Positioned(
                   top: 60,
                   right: 20,
-                  child: IconButton(
-                    onPressed: () async {
-                      final picker = ImagePicker();
-                      final XFile? pickedFile = await picker.pickImage(
-                        source: ImageSource.gallery,
-                        // ImageSource.camera,
-                        imageQuality: 100
-                        );
-                        if ( pickedFile == null ){
-                          return;
-                        } else{
-                          productService.updateSelectedProductImage(pickedFile.path);
-                        }                    
-                    },
-                    icon: const Icon(
+                  child: InkWell(
+                    onLongPress: (()  => prueba(ImageSource.camera)),
+                    onTap: () => prueba(ImageSource.gallery),
+                    child: const Icon(
                       Icons.camera_alt_outlined,
                       size: 40,
                       color: Colors.white,
@@ -200,4 +203,5 @@ class _ProductForm extends StatelessWidget {
               blurRadius: 5,
             ),
           ]);
+          
 }
