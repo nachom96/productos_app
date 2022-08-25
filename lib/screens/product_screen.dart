@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,16 +94,26 @@ class _ProductScreenBody extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save_outlined),
-        onPressed: () async {
+        onPressed: productService.isSaving
+        ? null
+        : () async {
           if (!productForm.isValidForm() ) return;
 
           final String? imageUrl = await productService.uploadImage();
 
-          print(imageUrl);
+          if ( imageUrl != null ) productForm.product.picture = imageUrl;
           
           await productService.saverOrCreateProduct(productForm.product);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Producto guardado con éxito'),
+          ),
+        );
         },
+        child: productService.isSaving 
+        ? const CircularProgressIndicator( color: Colors.white,)
+        : const Icon(Icons.save_outlined),
       ),
     );
   }
