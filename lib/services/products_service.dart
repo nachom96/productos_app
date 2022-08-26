@@ -31,8 +31,8 @@ class ProductsService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.https(_baseUrl, 'products.json', {
-      'auth': await storage.read(key: 'token') ?? ''
+    final url = Uri.https(_baseUrl, 'products.json',{
+      'auth' : await storage.read(key: 'token') ?? ''
     });
     final resp = await http.get(url);
 
@@ -72,7 +72,7 @@ class ProductsService extends ChangeNotifier {
   Future<String> updateProduct ( Product product ) async {
 
     final url = Uri.https(_baseUrl, 'products/${ product.id }.json', {
-      'auth': await storage.read(key: 'token') ?? ''
+      'auth' : await storage.read(key: 'token') ?? ''
     });
     final resp = await http.put(url, body: product.toJson(),);
     final decodedData = resp.body;
@@ -90,7 +90,9 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> createProduct ( Product product ) async {
 
-    final url = Uri.https(_baseUrl, 'products.json');
+    final url = Uri.https(_baseUrl, 'products.json', {
+      'auth' : await storage.read(key: 'token') ?? ''
+    });
     final resp = await http.post(url, body: product.toJson());
     final decodedData = json.decode( resp.body );
 
